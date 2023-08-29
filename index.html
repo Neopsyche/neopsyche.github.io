@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creation Atlas</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        h3 {
+            color: #89CFF0;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .image-logo img {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<h3>Creation Atlas</h3>
+<p>by Daniele Fusetto</p>
+
+	<script>
+	d3.json('YOUR_GOOGLE_APPS_SCRIPT_ENDPOINT_URL', function(error, data) {
+	  if (error) throw error;
+
+	  // Set up your SVG canvas and other D3.js components here...
+
+	  // Example: Create nodes using circles
+	  var nodes = svg.selectAll('.node')
+		.data(data.nodes)
+		.enter().append('circle')
+		.attr('cx', d => d.x) // You'll have to define x and y, e.g., with a force layout
+		.attr('cy', d => d.y)
+		.attr('r', 10)
+		.style('fill', d => d.NodeColor)
+		.style('stroke', 'black'); // Assuming you want a black border
+
+	  // Example: Add text labels to nodes
+	  var labels = svg.selectAll('.label')
+		.data(data.nodes)
+		.enter().append('text')
+		.attr('x', d => d.x)
+		.attr('y', d => d.y)
+		.attr('text-anchor', 'middle')
+		.attr('dominant-baseline', 'central')
+		.style('fill', d => d.FontColor)
+		.text(d => d.Title);
+
+	  // Example: Draw links/relationships
+	  var links = svg.selectAll('.link')
+		.data(data.edges)
+		.enter().append('line')
+		.attr('x1', d => /* find source node's x using d.SourceNodeID */)
+		.attr('y1', d => /* find source node's y using d.SourceNodeID */)
+		.attr('x2', d => /* find target node's x using d.TargetNodeID */)
+		.attr('y2', d => /* find target node's y using d.TargetNodeID */)
+		.style('stroke', d => d.EdgeColor);
+	  
+	  // ... Rest of the D3.js code for force simulation, drag behaviors, etc.
+	});
+	</script>
+
+
+<!-- Footer -->
+<footer>
+    <div class="image-logo">
+        <img src="https://primorden.com/assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
+    </div>
+    <p>Chatchill | Version 1.0</p>
+</footer>
+
+<script>
+    // Your D3.js code from Step 4 goes here
+</script>
+
+</body>
+</html>

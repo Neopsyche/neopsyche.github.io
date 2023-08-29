@@ -1,0 +1,4 @@
+SourceNodeID,SourceTitle,TargetNodeID,TargetTitle,RelationType,EdgeColor
+1,Ehir,2,Bytos,by dying generates,#ffa500
+1,Ehir,3,Fiahmut,by dying generates,#ffa500
+2,Bytos,4,Archi,by accident,#ffa500

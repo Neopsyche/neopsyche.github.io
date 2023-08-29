@@ -1,0 +1,12 @@
+ID,Title,Description,Rank,Type,Shape,NodeColor,FontColor,Pillar,Pillar_Aura,AuraColor,CategoryName1,CategoryLabel1,CategoryValue1,CategoryName2,CategoryLabel2,CategoryValue2,CategoryName3,CategoryLabel3,CategoryValue3,CategoryName4,CategoryLabel4,CategoryValue4,CategoryName5,CategoryLabel5,CategoryValue5
+1,Ehir,The entity that make the first progress by dying. From theri collapsed matter everything originates.,Origin,Primordial,Circle,#ffffff,#32115c,Progress,20,#ffffff,,,,Source of all,Progress,,Trait,Unthinkable,,,,,,,
+2,Bytos,Primordial Origin of Force and Creation,Origin,Primordial,Circle,#ffffff,#32115c,Force,15,#ffffff,Additional Pillar,Creation,10,Origin of,Force,,Trait,Ambitious,,,,,,,
+3,Fiahmut,Primordial Origin of Corruption,Origin,Primordial,Circle,#ffffff,#32115c,Corruption,17,#ffffff,,,,Origin of,Corruption,,Trait,Ominous,,,,,,,
+4,Archi,TBD,Origin,Primordial,Circle,#ffffff,#32115c,Creation,10,#ffffff,Additional Pillar,Force,10,Origin of,Beginning,,Trait,Gentle,,,,,,,
+5,Telos,TBD,Origin,Parent,Diamond,,,Annihilation,7,#ffffff,,,,Origin of,End,,Trait,Unforgiving,,,,,,,
+6,Infini,TBD,Origin,Parent,Diamond,,,Progress,7,#ffffff,,,,Origin of,Infinity,,Trait,Optimistic,,,,,,,
+7,Fei,TBD,Origin,Parent,Diamond,,,Procreation,7,#ffffff,,,,Origin of,Nature,,Trait,Flirtuous,,,,,,,
+8,Diaga,TBD,Origin,Parent,Diamond,,,Existance,7,#ffffff,,,,Origin of,Life,,Trait,Conciliatory,,,,,,,
+9,Anmisako,TBD,Origin,Parent,Diamond,,,Demise,7,#ffffff,,,,Origin of,Death,,Trait,Fatalistic,,,,,,,
+10,Enterobi,TBD,Origin,Parent,Diamond,,,Decay,7,#ffffff,,,,Origin of,Decay,,Trait,Fast-growing,,,,,,,
+11,Solan,TBD,Origin,Primordial,Circle,#ffffff,#112b5c,#112b5c,Speed,15,#ffffff,Additional Pillar,Creation,10,Origin of,Speed,,Trait,Crafting,,,,,,

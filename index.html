@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Permissions-Policy" content="interest-cohort=()"/>
     <title>Creation Atlas</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
@@ -49,7 +50,7 @@
 
 	<script>
 	// Fetch the data
-	d3.json('https://script.google.com/a/macros/chillchat.me/s/AKfycbzFhT1gz6PmXnR3EU4ubWtHWYQjQt5wUpAf45fo-vJQ39BQc23wICifQigMERr3M1cmFQ/exec', function(error, data) {
+	d3.json('https://script.google.com/macros/s/AKfycbzFhT1gz6PmXnR3EU4ubWtHWYQjQt5wUpAf45fo-vJQ39BQc23wICifQigMERr3M1cmFQ/exec', function(error, data) {
 	  if (error) throw error;
 
 	  var svg = d3.select("#atlasCanvas");

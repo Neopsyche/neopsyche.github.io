@@ -9,8 +9,6 @@
 
 		import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-		const div = d3.selectAll("div");
-
 	</script>
     <style>
         body {
@@ -57,7 +55,10 @@
 	<script>
 	// Fetch the data
 	d3.json('https://script.google.com/macros/s/AKfycbzFhT1gz6PmXnR3EU4ubWtHWYQjQt5wUpAf45fo-vJQ39BQc23wICifQigMERr3M1cmFQ/exec', function(error, data) {
-	  if (error) throw error;
+	   if (error) {
+        displayError(error);
+        return;  // Exit the function
+    }
 
 	  var svg = d3.select("#atlasCanvas");
 
@@ -138,7 +139,7 @@
 <!-- Footer -->
 <footer>
     <div class="image-logo">
-        <img src="https://primorden.com/assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
+        <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
     </div>
     <p>Chatchill | Version 1.0</p>
 </footer>

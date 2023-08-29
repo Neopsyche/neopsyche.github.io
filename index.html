@@ -10,10 +10,12 @@
             background-color: black;
             color: white;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
         h3 {
             color: #89CFF0;
             font-weight: bold;
+			text-align: center;
         }
         footer {
             margin-top: 20px;
@@ -22,6 +24,20 @@
         .image-logo img {
             margin-top: 10px;
         }
+		
+		.tooltip {
+			position: absolute;
+			text-align: center;
+			width: 200px;
+			height: auto;
+			padding: 5px;
+			background: white;
+			color: black;
+			border: 1px solid #89CFF0;
+			border-radius: 5px;
+			pointer-events: none;
+		}
+
     </style>
 </head>
 <body>
@@ -39,16 +55,34 @@
 	  var svg = d3.select("#atlasCanvas");
 
 	  var simulation = d3.forceSimulation(data.nodes)
-		  .force("link", d3.forceLink(data.edges).id(d => d.ID))
-		  .force("charge", d3.forceManyBody())
-		  .force("center", d3.forceCenter(svg.attr("width") / 2, svg.attr("height") / 2));
+		.force("link", d3.forceLink(data.edges).id(d => d.ID))
+		.force("charge", d3.forceManyBody().strength(-200))
+		.force("center", d3.forceCenter(svg.attr("width") / 2, svg.attr("height") / 2));
+
+	  // Tooltips
+	  var tooltip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
 
 	  var nodes = svg.selectAll('.node')
 		.data(data.nodes)
-		.enter().append('circle')
+		.enter().append('circle')  // Currently, only circles are used for nodes. This can be enhanced based on the 'Shape' attribute.
 		.attr('r', 10)
 		.style('fill', d => d.NodeColor)
-		.style('stroke', 'black');
+		.style('stroke', 'black')
+		.on("mouseover", function(d) {
+		  tooltip.transition()
+			.duration(200)
+			.style("opacity", .9);
+		  tooltip.html(d.hoverText)
+			.style("left", (d3.event.pageX) + "px")
+			.style("top", (d3.event.pageY - 28) + "px");
+		})
+		.on("mouseout", function(d) {
+		  tooltip.transition()
+			.duration(500)
+			.style("opacity", 0);
+		});
 
 	  var labels = svg.selectAll('.label')
 		.data(data.nodes)
@@ -62,6 +96,14 @@
 		.data(data.edges)
 		.enter().append('line')
 		.style('stroke', d => d.EdgeColor);
+
+	  var edgeTexts = svg.selectAll('.edgeText')
+		.data(data.edges)
+		.enter().append('text')
+		.attr('text-anchor', 'middle')
+		.attr('dominant-baseline', 'central')
+		.style('fill', 'white')  // Assuming you want the relationship type text to be white.
+		.text(d => d.RelationType);
 
 	  simulation.on("tick", function() {
 		links
@@ -77,6 +119,10 @@
 		labels
 		  .attr("x", d => d.x)
 		  .attr("y", d => d.y);
+
+		edgeTexts
+		  .attr("x", d => (d.source.x + d.target.x) / 2)
+		  .attr("y", d => (d.source.y + d.target.y) / 2);
 	  });
 	});
 	</script>

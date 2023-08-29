@@ -26,48 +26,58 @@
 </head>
 <body>
 
-<!-- Header -->
 <h3>Creation Atlas</h3>
 <p>by Daniele Fusetto</p>
 
+<svg id="atlasCanvas" width="800" height="600"></svg>
+
 	<script>
+	// Fetch the data
 	d3.json('https://script.google.com/a/macros/chillchat.me/s/AKfycbzFhT1gz6PmXnR3EU4ubWtHWYQjQt5wUpAf45fo-vJQ39BQc23wICifQigMERr3M1cmFQ/exec', function(error, data) {
 	  if (error) throw error;
 
-	  // Set up your SVG canvas and other D3.js components here...
+	  var svg = d3.select("#atlasCanvas");
 
-	  // Example: Create nodes using circles
+	  var simulation = d3.forceSimulation(data.nodes)
+		  .force("link", d3.forceLink(data.edges).id(d => d.ID))
+		  .force("charge", d3.forceManyBody())
+		  .force("center", d3.forceCenter(svg.attr("width") / 2, svg.attr("height") / 2));
+
 	  var nodes = svg.selectAll('.node')
 		.data(data.nodes)
 		.enter().append('circle')
-		.attr('cx', d => d.x) // You'll have to define x and y, e.g., with a force layout
-		.attr('cy', d => d.y)
 		.attr('r', 10)
 		.style('fill', d => d.NodeColor)
-		.style('stroke', 'black'); // Assuming you want a black border
+		.style('stroke', 'black');
 
-	  // Example: Add text labels to nodes
 	  var labels = svg.selectAll('.label')
 		.data(data.nodes)
 		.enter().append('text')
-		.attr('x', d => d.x)
-		.attr('y', d => d.y)
 		.attr('text-anchor', 'middle')
 		.attr('dominant-baseline', 'central')
 		.style('fill', d => d.FontColor)
 		.text(d => d.Title);
 
-	  // Example: Draw links/relationships
 	  var links = svg.selectAll('.link')
 		.data(data.edges)
 		.enter().append('line')
-		.attr('x1', d => /* find source node's x using d.SourceNodeID */)
-		.attr('y1', d => /* find source node's y using d.SourceNodeID */)
-		.attr('x2', d => /* find target node's x using d.TargetNodeID */)
-		.attr('y2', d => /* find target node's y using d.TargetNodeID */)
 		.style('stroke', d => d.EdgeColor);
-	  
-	  // ... Rest of the D3.js code for force simulation, drag behaviors, etc.
+
+	  simulation.on("tick", function() {
+		links
+		  .attr("x1", d => d.source.x)
+		  .attr("y1", d => d.source.y)
+		  .attr("x2", d => d.target.x)
+		  .attr("y2", d => d.target.y);
+
+		nodes
+		  .attr("cx", d => d.x)
+		  .attr("cy", d => d.y);
+
+		labels
+		  .attr("x", d => d.x)
+		  .attr("y", d => d.y);
+	  });
 	});
 	</script>
 

@@ -44,6 +44,7 @@
     .then(data => {
 	    console.log(data); // <---- Add this line
         let formattedData = formatSheetsData(data.values);
+	    console.log("Formatted Data:", formattedData);  // <-- Add this line
         drawShapes(formattedData);
     })
     .catch(error => {
@@ -66,11 +67,14 @@
 }
 
 
-    function drawShapes(dataArray) {
-		const svg = d3.select("#canvas");
+	function drawShapes(dataArray) {
+		const svg = d3.select("#canvas");  // Changed from 'body' to target the 'canvas' svg directly
 
-		dataArray.forEach((data, index) => {
-			let clipId = `clip-${index}`;
+		dataArray.forEach(data => {
+			if (!data.shape || !data.x || !data.y || !data.size) {
+				console.warn("Incomplete data:", data);  // Log any incomplete data for debugging
+				return;
+			}
 
 			switch(data.shape.toLowerCase()) {
 				case 'circle':

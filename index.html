@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Shapes from Spreadsheet</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shapes from Google Sheet</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
 	<style>
         body {
             background-color: black;
@@ -34,57 +35,72 @@
     <script>
         const URL = 'https://script.google.com/macros/s/AKfycbxh6ZgPlkj0TAJLr3GaxCtSmzw7L6NVZdUhRyJMBg9XrfRj9pi-4upx_gdfjZKQip45LQ/exec'; // Replace this with your web app URL
 
-        d3.json(URL).then(data => {
-            const canvas = d3.select("#canvas");
+        const DATA = {}; // This can be empty or contain any data you want to send to the Google Apps Script
 
-            data.forEach(item => {
-                if (item.shape === "circle") {
-                    canvas.append("circle")
-                        .attr("cx", item.x)
-                        .attr("cy", item.y)
-                        .attr("r", item.size)
-                        .attr("fill", "blue");
-                    
-                    if(item.text) {
-                        canvas.append("text")
-                            .attr("x", item.x)
-                            .attr("y", item.y)
-                            .text(item.text)
-                            .attr("font-family", "Arial")
-                            .attr("font-size", "14px")
-                            .attr("fill", "black");
-                    }
-                }
-                if (item.shape === "square") {
-                    canvas.append("rect")
-                        .attr("x", item.x - item.size / 2)
-                        .attr("y", item.y - item.size / 2)
-                        .attr("width", item.size)
-                        .attr("height", item.size)
-                        .attr("fill", "red");
-                    
-                    if(item.text) {
-                        canvas.append("text")
-                            .attr("x", item.x)
-                            .attr("y", item.y)
-                            .text(item.text)
-                            .attr("font-family", "Arial")
-                            .attr("font-size", "14px")
-                            .attr("fill", "black");
-                    }
-                }
-                // Assuming the first two items in the array are the circle and square respectively
-                if (item.shape === "line") {
-                    canvas.append("line")
-                        .attr("x1", data[0].x)
-                        .attr("y1", data[0].y)
-                        .attr("x2", data[1].x)
-                        .attr("y2", data[1].y)
-                        .attr("stroke", "black");
-                }
-            });
-        });
-    </script>
+		// Fetch data from Google Apps Script
+		fetch(URL, {
+			redirect: "follow",
+			method: "POST",
+			body: JSON.stringify(DATA),
+			headers: {
+				"Content-Type": "text/plain;charset=utf-8",
+			},
+		})
+		.then(response => response.json())
+		.then(data => {
+			drawShapes(data);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+
+		function drawShapes(dataArray) {
+			const svg = d3.select("body")
+						  .append("svg")
+						  .attr("width", 800)
+						  .attr("height", 600);
+
+			dataArray.forEach(data => {
+				switch(data.shape) {
+					case 'circle':
+						svg.append("circle")
+						   .attr("cx", data.x)
+						   .attr("cy", data.y)
+						   .attr("r", data.size)
+						   .attr("fill", "blue");
+
+						if (data.text) {
+							svg.append("text")
+							   .attr("x", data.x)
+							   .attr("y", data.y)
+							   .attr("text-anchor", "middle")
+							   .text(data.text);
+						}
+						break;
+
+					case 'square':
+						svg.append("rect")
+						   .attr("x", data.x - data.size / 2)
+						   .attr("y", data.y - data.size / 2)
+						   .attr("width", data.size)
+						   .attr("height", data.size)
+						   .attr("fill", "red");
+
+						if (data.text) {
+							svg.append("text")
+							   .attr("x", data.x)
+							   .attr("y", data.y)
+							   .attr("text-anchor", "middle")
+							   .text(data.text);
+						}
+						break;
+						
+					// Add cases for other shapes as needed
+				}
+			});
+		}
+
+		</script>
 	<!-- Footer -->
 <footer>
     <div class="image-logo">

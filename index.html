@@ -49,18 +49,22 @@
         console.error('Error:', error);
     });
 
-    function formatSheetsData(values) {
-        const headers = values[0]; // Assuming the first row contains headers
-        const rows = values.slice(1);
+		function formatSheetsData(values) {
+		const headers = values[0]; // Assuming first row contains headers
+		const rows = values.slice(1);
 
-        return rows.map(row => {
-            let obj = {};
-            headers.forEach((header, index) => {
-                obj[header.toLowerCase()] = row[index];
-            });
-            return obj;
-        });
-    }
+		return rows.map(row => {
+			let obj = {};
+			headers.forEach((header, index) => {
+				if(row[index]) { // Check if value exists for the current index
+					obj[header.toLowerCase()] = row[index];
+				} else {
+					obj[header.toLowerCase()] = ""; // Assign a default empty string if undefined
+				}
+			});
+			return obj;
+		});
+	}
 
     function drawShapes(dataArray) {
 		const svg = d3.select("#canvas");

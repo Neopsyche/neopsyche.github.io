@@ -4,8 +4,31 @@
     <meta charset="UTF-8">
     <title>Shapes from Spreadsheet</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+	<style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h3 {
+            color: #89CFF0;
+            font-weight: bold;
+            text-align: center;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .image-logo img {
+            margin-top: 10px;
+    </style>
 </head>
 <body>
+
+<h3>Creation Atlas Test</h3>
+<p>by Daniele Fusetto</p>
+
     <svg width="500" height="500" id="canvas"></svg>
 
     <script>
@@ -62,5 +85,13 @@
             });
         });
     </script>
+	<!-- Footer -->
+<footer>
+    <div class="image-logo">
+        <!-- Use local asset for logo -->
+        <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
+    </div>
+    <p>Chatchill | Version 1.0</p>
+</footer>
 </body>
 </html>

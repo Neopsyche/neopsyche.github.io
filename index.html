@@ -27,94 +27,97 @@
 </head>
 <body>
 
-<h3>Creation Atlas Test 2.1</h3>
+<h3>Creation Atlas Test 2.2</h3>
 <p>by Daniele Fusetto</p>
 
-    <svg width="800" height="800" id="canvas"></svg>
+<svg width="800" height="800" id="canvas" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
 
-    <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbzwhBeNzR7Xz9gHEvgLe9rhTzmuxosNt2e7QQYlDgy5QNrVTqmxAQykvjPEyovfWi6BkA/exec'; // Replace this with your web app URL
+<script>
+    const SHEET_ID = '1CPS6tRy2uBibsFKyRg78PL91_bL2MviLgymcBH9A3YI';
+	const API_KEY = 'AIzaSyD3DKpkzNfuNOPuHH7i-rwncVw2y3aY7_8';
+	const RANGE = 'Sheet1';
+	const URL = `https://sheets.googleapis.com/v4/spreadsheets/1CPS6tRy2uBibsFKyRg78PL91_bL2MviLgymcBH9A3YI/values/Sheet1?key=AIzaSyD3DKpkzNfuNOPuHH7i-rwncVw2y3aY7_8`;
 
-        const DATA = {}; // This can be empty or contain any data you want to send to the Google Apps Script
 
-		// Fetch data from Google Apps Script
-		fetch(URL, {
-			redirect: "follow",
-			method: "POST",
-			body: JSON.stringify(DATA),
-			headers: {
-				"Content-Type": "text/plain;charset=utf-8",
-			},
-		})
-		.then(response => response.json())
-		.then(data => {
-			drawShapes(data);
-		})
-		.catch(error => {
-			console.error('Error:', error);
+    fetch(URL)
+    .then(response => response.json())
+    .then(data => {
+        let formattedData = formatSheetsData(data.values);
+        drawShapes(formattedData);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    function formatSheetsData(values) {
+        const headers = values[0]; // Assuming the first row contains headers
+        const rows = values.slice(1);
+
+        return rows.map(row => {
+            let obj = {};
+            headers.forEach((header, index) => {
+                obj[header.toLowerCase()] = row[index];
+            });
+            return obj;
+        });
+    }
+
+    function drawShapes(dataArray) {
+		const svg = d3.select("#canvas");
+
+		dataArray.forEach((data, index) => {
+			let clipId = `clip-${index}`;
+
+			switch(data.shape.toLowerCase()) {
+				case 'circle':
+					let circle = svg.append("circle")
+									.attr("cx", data["x position"])
+									.attr("cy", data["y position"])
+									.attr("r", data.size)
+									.attr("fill", "blue");
+
+					svg.append("clipPath")
+					   .attr("id", clipId)
+					   .append("circle")
+					   .attr("cx", data["x position"])
+					   .attr("cy", data["y position"])
+					   .attr("r", data.size);
+					break;
+
+				case 'square':
+					let square = svg.append("rect")
+									.attr("x", data["x position"] - data.size / 2)
+									.attr("y", data["y position"] - data.size / 2)
+									.attr("width", data.size)
+									.attr("height", data.size)
+									.attr("fill", "red");
+
+					svg.append("clipPath")
+					   .attr("id", clipId)
+					   .append("rect")
+					   .attr("x", data["x position"] - data.size / 2)
+					   .attr("y", data["y position"] - data.size / 2)
+					   .attr("width", data.size)
+					   .attr("height", data.size);
+					break;
+
+				// Add cases for other shapes as needed
+			}
+
+			// Append the image and clip it with the defined clipPath
+			svg.append("image")
+			   .attr("xlink:href", data.image)
+			   .attr("x", data["x position"] - data.size / 2)
+			   .attr("y", data["y position"] - data.size / 2)
+			   .attr("width", data.size)
+			   .attr("height", data.size)
+			   .attr("clip-path", `url(#${clipId})`);
 		});
+	}
 
-		function drawShapes(dataArray) {
-			const svg = d3.select("#canvas"); // We're using the existing SVG, not appending a new one
+</script>
 
-			dataArray.forEach(data => {
-				switch(data.shape) {
-					case 'circle':
-						svg.append("circle")
-						   .attr("cx", data.x)
-						   .attr("cy", data.y)
-						   .attr("r", data.size)
-						   .attr("fill", "white") // Using white as the fill color
-						   .style("stroke", "black"); // Border color
-
-						// Insert image logic here
-						svg.append("image")
-						   .attr("xlink:href", data.image)
-						   .attr("x", data.x - data.size)
-						   .attr("y", data.y - data.size)
-						   .attr("width", 2 * data.size)
-						   .attr("height", 2 * data.size);
-
-						if (data.title) { // Using 'title' now instead of 'text'
-							svg.append("text")
-							   .attr("x", data.x)
-							   .attr("y", data.y)
-							   .attr("text-anchor", "middle")
-							   .text(data.title);
-						}
-						break;
-
-					case 'square':
-						svg.append("rect")
-						   .attr("x", data.x - data.size / 2)
-						   .attr("y", data.y - data.size / 2)
-						   .attr("width", data.size)
-						   .attr("height", data.size)
-						   .attr("fill", "white");
-
-						// Insert image logic here
-						svg.append("image")
-						   .attr("xlink:href", data.image)
-						   .attr("x", data.x - data.size / 2)
-						   .attr("y", data.y - data.size / 2)
-						   .attr("width", data.size)
-						   .attr("height", data.size);
-
-						if (data.title) {
-							svg.append("text")
-							   .attr("x", data.x)
-							   .attr("y", data.y)
-							   .attr("text-anchor", "middle")
-							   .text(data.title);
-						}
-						break;
-				}
-			});
-		}
-
-
-		</script>
-	<!-- Footer -->
+<!-- Footer -->
 <footer>
     <div class="image-logo">
         <!-- Use local asset for logo -->

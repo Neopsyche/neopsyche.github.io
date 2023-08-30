@@ -30,10 +30,10 @@
 <h3>Creation Atlas Test</h3>
 <p>by Daniele Fusetto</p>
 
-    <svg width="500" height="500" id="canvas"></svg>
+    <svg width="800" height="800" id="canvas"></svg>
 
     <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbxh6ZgPlkj0TAJLr3GaxCtSmzw7L6NVZdUhRyJMBg9XrfRj9pi-4upx_gdfjZKQip45LQ/exec'; // Replace this with your web app URL
+        const URL = 'https://script.google.com/macros/s/AKfycbzwhBeNzR7Xz9gHEvgLe9rhTzmuxosNt2e7QQYlDgy5QNrVTqmxAQykvjPEyovfWi6BkA/exec'; // Replace this with your web app URL
 
         const DATA = {}; // This can be empty or contain any data you want to send to the Google Apps Script
 
@@ -55,10 +55,7 @@
 		});
 
 		function drawShapes(dataArray) {
-			const svg = d3.select("body")
-						  .append("svg")
-						  .attr("width", 800)
-						  .attr("height", 600);
+			const svg = d3.select("#canvas"); // We're using the existing SVG, not appending a new one
 
 			dataArray.forEach(data => {
 				switch(data.shape) {
@@ -67,14 +64,23 @@
 						   .attr("cx", data.x)
 						   .attr("cy", data.y)
 						   .attr("r", data.size)
-						   .attr("fill", "blue");
+						   .attr("fill", "white") // Using white as the fill color
+						   .style("stroke", "black"); // Border color
 
-						if (data.text) {
+						// Insert image logic here
+						svg.append("image")
+						   .attr("xlink:href", data.image)
+						   .attr("x", data.x - data.size)
+						   .attr("y", data.y - data.size)
+						   .attr("width", 2 * data.size)
+						   .attr("height", 2 * data.size);
+
+						if (data.title) { // Using 'title' now instead of 'text'
 							svg.append("text")
 							   .attr("x", data.x)
 							   .attr("y", data.y)
 							   .attr("text-anchor", "middle")
-							   .text(data.text);
+							   .text(data.title);
 						}
 						break;
 
@@ -84,21 +90,28 @@
 						   .attr("y", data.y - data.size / 2)
 						   .attr("width", data.size)
 						   .attr("height", data.size)
-						   .attr("fill", "red");
+						   .attr("fill", "white");
 
-						if (data.text) {
+						// Insert image logic here
+						svg.append("image")
+						   .attr("xlink:href", data.image)
+						   .attr("x", data.x - data.size / 2)
+						   .attr("y", data.y - data.size / 2)
+						   .attr("width", data.size)
+						   .attr("height", data.size);
+
+						if (data.title) {
 							svg.append("text")
 							   .attr("x", data.x)
 							   .attr("y", data.y)
 							   .attr("text-anchor", "middle")
-							   .text(data.text);
+							   .text(data.title);
 						}
 						break;
-						
-					// Add cases for other shapes as needed
 				}
 			});
 		}
+
 
 		</script>
 	<!-- Footer -->

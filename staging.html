@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shapes from Google Sheet</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+	<style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h3 {
+            color: #89CFF0;
+            font-weight: bold;
+            text-align: center;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .image-logo img {
+            margin-top: 10px;
+    </style>
+</head>
+<body>
+
+<h3>Creation Atlas Test 2.20</h3>
+<p>by Daniele Fusetto</p>
+
+<svg width="800" height="800" id="canvas" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+
+<script>
+    const SHEET_ID = '1CPS6tRy2uBibsFKyRg78PL91_bL2MviLgymcBH9A3YI';
+	const API_KEY = 'AIzaSyD3DKpkzNfuNOPuHH7i-rwncVw2y3aY7_8';
+	const RANGE = 'Sheet1';
+	const URL = `https://sheets.googleapis.com/v4/spreadsheets/1CPS6tRy2uBibsFKyRg78PL91_bL2MviLgymcBH9A3YI/values/Sheet1?key=AIzaSyD3DKpkzNfuNOPuHH7i-rwncVw2y3aY7_8`;
+
+
+    fetch(URL)
+    .then(response => response.json())
+    .then(data => {
+	    console.log(data); // <---- Add this line
+        let formattedData = formatSheetsData(data.values);
+	    console.log("Formatted Data:", formattedData);  // <-- Add this line
+        drawShapes(formattedData);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+	function formatSheetsData(values) {
+		const headers = values[0]; 
+		const rows = values.slice(1);
+
+		return rows.map(row => {
+			let obj = {};
+			headers.forEach((header, index) => {
+				let formattedHeader = header.toLowerCase().replace(/\s+/g, ''); // Convert to lowercase and remove spaces
+				obj[formattedHeader] = row[index];
+			});
+			return obj;
+		});
+	}
+
+
+	function drawShapes(dataArray) {
+    const svg = d3.select("#canvas");
+
+    dataArray.forEach(data => {
+        if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
+            console.warn("Incomplete data:", data);  
+            return;
+        }
+
+        let clipId = "clip" + Math.random().toString(36).substr(2, 9);
+
+        switch(data.shapetype.toLowerCase()) {
+            case 'circle':
+                let circle = svg.append("circle")
+                                .attr("cx", data.xposition)
+                                .attr("cy", data.yposition)
+                                .attr("r", data.size)
+                                .attr("fill", "blue");
+
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("circle")
+                   .attr("cx", data.xposition)
+                   .attr("cy", data.yposition)
+                   .attr("r", data.size);
+                break;
+
+            case 'square':
+                let square = svg.append("rect")
+                                .attr("x", data.xposition - data.size / 2)
+                                .attr("y", data.yposition - data.size / 2)
+                                .attr("width", data.size)
+                                .attr("height", data.size)
+                                .attr("fill", "red");
+
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("rect")
+                   .attr("x", data.xposition - data.size / 2)
+                   .attr("y", data.yposition - data.size / 2)
+                   .attr("width", data.size)
+                   .attr("height", data.size);
+                break;
+
+            // Add cases for other shapes as needed
+        }
+
+        // Append the image and clip it with the defined clipPath
+        svg.append("image")
+           .attr("xlink:href", data.image)
+           .attr("x", data.xposition - data.size / 2)
+           .attr("y", data.yposition - data.size / 2)
+           .attr("width", data.size)
+           .attr("height", data.size)
+           .attr("clip-path", `url(#${clipId})`);
+    });
+}
+
+
+
+</script>
+
+<!-- Footer -->
+<footer>
+    <div class="image-logo">
+        <!-- Use local asset for logo -->
+        <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
+    </div>
+    <p>Chatchill | Version 2.20</p>
+</footer>
+</body>
+</html>

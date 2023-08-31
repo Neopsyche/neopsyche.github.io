@@ -27,7 +27,7 @@
 </head>
 <body>
 
-<h3>Creation Atlas Test 2.22</h3>
+<h3 id="version-title">Creation Atlas Test</h3>
 <p>by Daniele Fusetto</p>
 
 <svg width="800" height="800" id="canvas" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
@@ -141,9 +141,22 @@
 						.attr("clip-path", `url(#${clipId})`);
 
 		});
-}
+	}
+</script>
 
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		// Define the version here
+		const version = "2.23";
 
+		// Set the version in the h3 title
+		const titleElement = document.getElementById("version-title");
+		titleElement.textContent = "Creation Atlas Test " + version;
+
+		// Set the version in the footer
+		const footerElement = document.getElementById("version-footer");
+		footerElement.textContent = "Chatchill | Version " + version;
+	});
 
 </script>
 
@@ -153,7 +166,7 @@
         <!-- Use local asset for logo -->
         <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
     </div>
-    <p>Chatchill | Version 2.22</p>
+    <p id="version-footer">Chatchill | Version</p>
 </footer>
 </body>
 </html>

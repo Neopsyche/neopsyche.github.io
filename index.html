@@ -51,30 +51,29 @@
         console.error('Error:', error);
     });
 
-		function formatSheetsData(values) {
-    const headers = values[0]; // Assuming first row contains headers
-    const rows = values.slice(1);
+	function formatSheetsData(values) {
+		const headers = values[0]; 
+		const rows = values.slice(1);
 
-    return rows.map(row => {
-        let obj = {};
-        headers.forEach((header, index) => {
-            // Assign a default value if the current row doesn't have a value for the current header
-            const value = row[index] !== undefined ? row[index] : "";
-            obj[header.toLowerCase()] = value;
-        });
-        return obj;
-    });
-}
+		return rows.map(row => {
+			let obj = {};
+			headers.forEach((header, index) => {
+				let formattedHeader = header.toLowerCase().replace(/\s+/g, ''); // Convert to lowercase and remove spaces
+				obj[formattedHeader] = row[index];
+			});
+			return obj;
+		});
+	}
 
 
 	function drawShapes(dataArray) {
-		const svg = d3.select("#canvas");  // Changed from 'body' to target the 'canvas' svg directly
+    const svg = d3.select("#canvas");
 
-		dataArray.forEach(data => {
-			if (!data.shape || !data.x || !data.y || !data.size) {
-				console.warn("Incomplete data:", data);  // Log any incomplete data for debugging
-				return;
-			}
+    dataArray.forEach(data => {
+        if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
+            console.warn("Incomplete data:", data);  
+            return;
+        }
 
 			switch(data.shape.toLowerCase()) {
 				case 'circle':

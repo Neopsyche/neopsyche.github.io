@@ -158,14 +158,16 @@
 					// Add cases for other shapes as needed
 				}
 
-				 nodeGroup.on("mouseover", function() {
-							d3.select(this).select(".popup").attr("visibility", "visible");
-							d3.select(this).select(".popupText").attr("visibility", "visible");
-						})
-						.on("mouseout", function() {
-							d3.select(this).select(".popup").attr("visibility", "hidden");
-							d3.select(this).select(".popupText").attr("visibility", "hidden");
-						});
+					nodeGroup.on("mouseover", function() {
+						console.log("Mouse over detected");
+						d3.select(this).select(".popup").attr("visibility", "visible");
+						d3.select(this).select(".popupText").attr("visibility", "visible");
+					})
+					.on("mouseout", function() {
+						console.log("Mouse out detected");
+						d3.select(this).select(".popup").attr("visibility", "hidden");
+						d3.select(this).select(".popupText").attr("visibility", "hidden");
+					});
 
 				// Append the image and clip it with the defined clipPath
 					svg.append("image")
@@ -183,7 +185,7 @@
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		// Define the version here
-		const version = "2.23";
+		const version = "2.24";
 
 		// Set the version in the h3 title
 		const titleElement = document.getElementById("version-title");

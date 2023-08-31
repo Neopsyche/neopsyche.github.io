@@ -27,7 +27,7 @@
 </head>
 <body>
 
-<h3>Creation Atlas Test 2.8</h3>
+<h3>Creation Atlas Test 2.19</h3>
 <p>by Daniele Fusetto</p>
 
 <svg width="800" height="800" id="canvas" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
@@ -70,21 +70,19 @@
     const svg = d3.select("#canvas");
 
     dataArray.forEach(data => {
-        console.log("Processing data:", data); // Logging the current item
-
-        if (!data.shapetype || !data["x position"] || !data["y position"] || !data.size) {
+        if (!data["Shape Type"] || !data["x position"] || !data["y position"] || !data["Size"]) {
             console.warn("Incomplete data:", data);  
             return;
         }
 
-        let clipId = `clip${Math.random().toString(36).substr(2, 9)}`;  // To generate a random clip id
+        let clipId = "clip" + Math.random().toString(36).substr(2, 9);
 
-        switch(data.shapetype.toLowerCase()) { // Noted changed key here!
+        switch(data["Shape Type"].toLowerCase()) {
             case 'circle':
                 let circle = svg.append("circle")
                                 .attr("cx", data["x position"])
                                 .attr("cy", data["y position"])
-                                .attr("r", data.size)
+                                .attr("r", data["Size"])
                                 .attr("fill", "blue");
 
                 svg.append("clipPath")
@@ -92,42 +90,40 @@
                    .append("circle")
                    .attr("cx", data["x position"])
                    .attr("cy", data["y position"])
-                   .attr("r", data.size);
+                   .attr("r", data["Size"]);
                 break;
 
             case 'square':
                 let square = svg.append("rect")
-                                .attr("x", data["x position"] - data.size / 2)
-                                .attr("y", data["y position"] - data.size / 2)
-                                .attr("width", data.size)
-                                .attr("height", data.size)
+                                .attr("x", data["x position"] - data["Size"] / 2)
+                                .attr("y", data["y position"] - data["Size"] / 2)
+                                .attr("width", data["Size"])
+                                .attr("height", data["Size"])
                                 .attr("fill", "red");
 
                 svg.append("clipPath")
                    .attr("id", clipId)
                    .append("rect")
-                   .attr("x", data["x position"] - data.size / 2)
-                   .attr("y", data["y position"] - data.size / 2)
-                   .attr("width", data.size)
-                   .attr("height", data.size);
+                   .attr("x", data["x position"] - data["Size"] / 2)
+                   .attr("y", data["y position"] - data["Size"] / 2)
+                   .attr("width", data["Size"])
+                   .attr("height", data["Size"]);
                 break;
 
-            // If no known shape is detected, log it.
-            default:
-                console.error("Unknown shape type:", data.shapetype);
-                return;
+            // Add cases for other shapes as needed
         }
 
         // Append the image and clip it with the defined clipPath
         svg.append("image")
-           .attr("xlink:href", data.image)
-           .attr("x", data["x position"] - data.size / 2)
-           .attr("y", data["y position"] - data.size / 2)
-           .attr("width", data.size)
-           .attr("height", data.size)
+           .attr("xlink:href", data.Image)
+           .attr("x", data["x position"] - data["Size"] / 2)
+           .attr("y", data["y position"] - data["Size"] / 2)
+           .attr("width", data["Size"])
+           .attr("height", data["Size"])
            .attr("clip-path", `url(#${clipId})`);
     });
 }
+
 
 </script>
 
@@ -137,7 +133,7 @@
         <!-- Use local asset for logo -->
         <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
     </div>
-    <p>Chatchill | Version 2.8</p>
+    <p>Chatchill | Version 2.19</p>
 </footer>
 </body>
 </html>

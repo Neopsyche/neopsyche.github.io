@@ -66,12 +66,39 @@
 	}
 
 
-	function drawShapes(dataArray) {
-		const svg = d3.select("#canvas");
+		function drawShapes(dataArray) {
+			const svg = d3.select("#canvas");
 
-			dataArray.forEach((data, index) => {  // Notice the addition of 'index'
-				let clipId = "clip" + index;  // Generate unique clipId for this shape
+			dataArray.forEach((data, index) => {
+				let clipId = "clip" + index;
 				
+				// Create a group for each node which will contain the shape and the associated popup
+				let nodeGroup = svg.append("g")
+								   .attr("class", "nodeGroup")
+								   .attr("transform", `translate(${data["xposition"]}, ${data["yposition"]})`);
+				
+				// Create the popup for each node (hidden by default)
+				let popupWidth = 150;  // Width of the popup
+				let popupHeight = 50;  // Height of the popup
+				nodeGroup.append("rect")
+						 .attr("class", "popup")
+						 .attr("x", -popupWidth/2)
+						 .attr("y", -popupHeight - 10)  // Positioning it 10 units above the node
+						 .attr("width", popupWidth)
+						 .attr("height", popupHeight)
+						 .attr("visibility", "hidden")
+						 .attr("fill", "#f9f9f9")
+						 .attr("stroke", "#aaa");
+				
+				nodeGroup.append("text")
+						 .attr("class", "popupText")
+						 .attr("x", 0)
+						 .attr("y", -popupHeight/2)
+						 .attr("text-anchor", "middle")
+						 .text(data.title)  // Displaying the node's title in the popup
+						 .attr("visibility", "hidden");
+				
+				// Your existing code for drawing the shapes goes here...
 				if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
 					console.warn("Incomplete data:", data);  
 					return;
@@ -130,6 +157,15 @@
 
 					// Add cases for other shapes as needed
 				}
+
+				 nodeGroup.on("mouseover", function() {
+							d3.select(this).select(".popup").attr("visibility", "visible");
+							d3.select(this).select(".popupText").attr("visibility", "visible");
+						})
+						.on("mouseout", function() {
+							d3.select(this).select(".popup").attr("visibility", "hidden");
+							d3.select(this).select(".popupText").attr("visibility", "hidden");
+						});
 
 				// Append the image and clip it with the defined clipPath
 					svg.append("image")

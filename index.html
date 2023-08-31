@@ -27,7 +27,7 @@
 </head>
 <body>
 
-<h3>Creation Atlas Test 2.7</h3>
+<h3>Creation Atlas Test 2.8</h3>
 <p>by Daniele Fusetto</p>
 
 <svg width="800" height="800" id="canvas" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
@@ -70,57 +70,64 @@
     const svg = d3.select("#canvas");
 
     dataArray.forEach(data => {
-        if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
+        console.log("Processing data:", data); // Logging the current item
+
+        if (!data.shapetype || !data["x position"] || !data["y position"] || !data.size) {
             console.warn("Incomplete data:", data);  
             return;
         }
 
-			switch(data.shape.toLowerCase()) {
-				case 'circle':
-					let circle = svg.append("circle")
-									.attr("cx", data["x position"])
-									.attr("cy", data["y position"])
-									.attr("r", data.size)
-									.attr("fill", "blue");
+        let clipId = `clip${Math.random().toString(36).substr(2, 9)}`;  // To generate a random clip id
 
-					svg.append("clipPath")
-					   .attr("id", clipId)
-					   .append("circle")
-					   .attr("cx", data["x position"])
-					   .attr("cy", data["y position"])
-					   .attr("r", data.size);
-					break;
+        switch(data.shapetype.toLowerCase()) { // Noted changed key here!
+            case 'circle':
+                let circle = svg.append("circle")
+                                .attr("cx", data["x position"])
+                                .attr("cy", data["y position"])
+                                .attr("r", data.size)
+                                .attr("fill", "blue");
 
-				case 'square':
-					let square = svg.append("rect")
-									.attr("x", data["x position"] - data.size / 2)
-									.attr("y", data["y position"] - data.size / 2)
-									.attr("width", data.size)
-									.attr("height", data.size)
-									.attr("fill", "red");
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("circle")
+                   .attr("cx", data["x position"])
+                   .attr("cy", data["y position"])
+                   .attr("r", data.size);
+                break;
 
-					svg.append("clipPath")
-					   .attr("id", clipId)
-					   .append("rect")
-					   .attr("x", data["x position"] - data.size / 2)
-					   .attr("y", data["y position"] - data.size / 2)
-					   .attr("width", data.size)
-					   .attr("height", data.size);
-					break;
+            case 'square':
+                let square = svg.append("rect")
+                                .attr("x", data["x position"] - data.size / 2)
+                                .attr("y", data["y position"] - data.size / 2)
+                                .attr("width", data.size)
+                                .attr("height", data.size)
+                                .attr("fill", "red");
 
-				// Add cases for other shapes as needed
-			}
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("rect")
+                   .attr("x", data["x position"] - data.size / 2)
+                   .attr("y", data["y position"] - data.size / 2)
+                   .attr("width", data.size)
+                   .attr("height", data.size);
+                break;
 
-			// Append the image and clip it with the defined clipPath
-			svg.append("image")
-			   .attr("xlink:href", data.image)
-			   .attr("x", data["x position"] - data.size / 2)
-			   .attr("y", data["y position"] - data.size / 2)
-			   .attr("width", data.size)
-			   .attr("height", data.size)
-			   .attr("clip-path", `url(#${clipId})`);
-		});
-	}
+            // If no known shape is detected, log it.
+            default:
+                console.error("Unknown shape type:", data.shapetype);
+                return;
+        }
+
+        // Append the image and clip it with the defined clipPath
+        svg.append("image")
+           .attr("xlink:href", data.image)
+           .attr("x", data["x position"] - data.size / 2)
+           .attr("y", data["y position"] - data.size / 2)
+           .attr("width", data.size)
+           .attr("height", data.size)
+           .attr("clip-path", `url(#${clipId})`);
+    });
+}
 
 </script>
 
@@ -130,7 +137,7 @@
         <!-- Use local asset for logo -->
         <img src="assets/logo.png" alt="Primorden Logo" width="23%" height="auto">
     </div>
-    <p>Chatchill | Version 2.7</p>
+    <p>Chatchill | Version 2.8</p>
 </footer>
 </body>
 </html>

@@ -71,33 +71,12 @@ function drawShapes(dataArray) {
 
     dataArray.forEach((data, index) => {
         let clipId = "clip" + index;
-
+					
         let nodeGroup = svg.append("g")
                            .attr("class", "nodeGroup")
                            .attr("transform", `translate(${data["xposition"]}, ${data["yposition"]})`);
         
         console.log("Node Group Created: ", nodeGroup.node());
-
-        // Create the popup for each node (hidden by default)
-        let popupWidth = 150;  // Width of the popup
-        let popupHeight = 50;  // Height of the popup
-        nodeGroup.append("rect")
-                 .attr("class", "popup")
-                 .attr("x", -popupWidth/2)
-                 .attr("y", -popupHeight - 10)
-                 .attr("width", popupWidth)
-                 .attr("height", popupHeight)
-                 .attr("visibility", "hidden")
-                 .attr("fill", "#f9f9f9")
-                 .attr("stroke", "#aaa");
-
-        nodeGroup.append("text")
-                 .attr("class", "popupText")
-                 .attr("x", 0)
-                 .attr("y", -popupHeight/2)
-                 .attr("text-anchor", "middle")
-                 .text(data.title)
-                 .attr("visibility", "hidden");
 
         if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
             console.warn("Incomplete data:", data);
@@ -151,6 +130,27 @@ function drawShapes(dataArray) {
                 break;
         }
 
+  // Create the popup for each node (hidden by default)
+        let popupWidth = 150;  // Width of the popup
+        let popupHeight = 50;  // Height of the popup
+        nodeGroup.append("rect")
+                 .attr("class", "popup")
+                 .attr("x", -popupWidth/2)
+                 .attr("y", -popupHeight - 10)  // Positioning it 10 units above the node
+                 .attr("width", popupWidth)
+                 .attr("height", popupHeight)
+                 .attr("visibility", "hidden")
+                 .attr("fill", "#f9f9f9")
+                 .attr("stroke", "#aaa");
+        
+        nodeGroup.append("text")
+                 .attr("class", "popupText")
+                 .attr("x", 0)
+                 .attr("y", -popupHeight/2)
+                 .attr("text-anchor", "middle")
+                 .text(data.title)  // Displaying the node's title in the popup
+                 .attr("visibility", "hidden");
+
         // Append the image and clip it with the defined clipPath
         nodeGroup.append("image")
                  .attr("xlink:href", data.image)
@@ -178,7 +178,7 @@ function drawShapes(dataArray) {
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		// Define the version here
-		const version = "2.263";
+		const version = "2.264";
 
 		// Set the version in the h3 title
 		const titleElement = document.getElementById("version-title");

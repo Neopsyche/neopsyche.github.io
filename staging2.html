@@ -66,7 +66,7 @@
 	}
 
 
-    function drawShapes(dataArray) {
+function drawShapes(dataArray) {
     const svg = d3.select("#canvas");
 
     dataArray.forEach((data, index) => {
@@ -172,12 +172,13 @@
         console.log("Node Group after appending elements:", nodeGroup.node());
     });
 }
+
 </script>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		// Define the version here
-		const version = "2.262";
+		const version = "2.263";
 
 		// Set the version in the h3 title
 		const titleElement = document.getElementById("version-title");

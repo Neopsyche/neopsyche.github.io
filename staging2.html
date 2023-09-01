@@ -111,13 +111,6 @@
 										.attr("cy", data.yposition)
 										.attr("r", data.size)
 										.attr("fill", "blue");
-
-						svg.append("clipPath")
-						   .attr("id", clipId)
-						   .append("circle")
-						   .attr("cx", data.xposition)
-						   .attr("cy", data.yposition)
-						   .attr("r", data.size);
 						break;
 
 					case 'square':
@@ -170,13 +163,16 @@
 					});
 
 				// Append the image and clip it with the defined clipPath
-					svg.append("image")
-						.attr("xlink:href", data.image)
-						.attr("x", data["xposition"] - data.size / 2)
-						.attr("y", data["yposition"] - data.size / 2)
-						.attr("width", data.size)
-						.attr("height", data.size)
-						.attr("clip-path", `url(#${clipId})`);
+					nodeGroup.append("image")
+						 .attr("xlink:href", data.image)
+						 .attr("x", -data.size / 2)  // Adjusted to align with nodeGroup's translate
+						 .attr("y", -data.size / 2)  // Adjusted to align with nodeGroup's translate
+						 .attr("width", data.size)
+						 .attr("height", data.size);
+
+				// Apply the clip-path to the entire nodeGroup
+					nodeGroup.attr("clip-path", `url(#${clipId})`);
+
 
 		});
 	}
@@ -185,7 +181,7 @@
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		// Define the version here
-		const version = "2.24";
+		const version = "2.25";
 
 		// Set the version in the h3 title
 		const titleElement = document.getElementById("version-title");

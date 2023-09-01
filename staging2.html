@@ -71,11 +71,11 @@
 
 			dataArray.forEach((data, index) => {
 				let clipId = "clip" + index;
-				
-				// Create a group for each node which will contain the shape and the associated popup
+					
 				let nodeGroup = svg.append("g")
 								   .attr("class", "nodeGroup")
 								   .attr("transform", `translate(${data["xposition"]}, ${data["yposition"]})`);
+				console.log("Node Group Created: ", nodeGroup.node());  // Debugging statement
 				
 				// Create the popup for each node (hidden by default)
 				let popupWidth = 150;  // Width of the popup
@@ -151,13 +151,16 @@
 					// Add cases for other shapes as needed
 				}
 
+					console.log("Image URL: ", data.image);  // Debugging statement
+					console.log("Clip Path Created with ID: ", clipId);  // Debugging statement
+
 					nodeGroup.on("mouseover", function() {
-						console.log("Mouse over detected");
+						console.log("Mouse over detected for group:", this);  // Debugging statement
 						d3.select(this).select(".popup").attr("visibility", "visible");
 						d3.select(this).select(".popupText").attr("visibility", "visible");
 					})
 					.on("mouseout", function() {
-						console.log("Mouse out detected");
+						console.log("Mouse out detected for group:", this);  // Debugging statement
 						d3.select(this).select(".popup").attr("visibility", "hidden");
 						d3.select(this).select(".popupText").attr("visibility", "hidden");
 					});
@@ -173,7 +176,7 @@
 				// Apply the clip-path to the entire nodeGroup
 					nodeGroup.attr("clip-path", `url(#${clipId})`);
 
-
+			console.log("Node Group after appending elements:", nodeGroup.node());  // Debugging statement
 		});
 	}
 </script>

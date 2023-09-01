@@ -42,9 +42,9 @@
     fetch(URL)
     .then(response => response.json())
     .then(data => {
-	    console.log(data); // <---- Add this line
+        console.log(data);  // DEBUG
         let formattedData = formatSheetsData(data.values);
-	    console.log("Formatted Data:", formattedData);  // <-- Add this line
+        console.log("Formatted Data:", formattedData);  // DEBUG
         drawShapes(formattedData);
     })
     .catch(error => {
@@ -66,125 +66,118 @@
 	}
 
 
-		function drawShapes(dataArray) {
-			const svg = d3.select("#canvas");
+    function drawShapes(dataArray) {
+    const svg = d3.select("#canvas");
 
-			dataArray.forEach((data, index) => {
-				let clipId = "clip" + index;
-					
-				let nodeGroup = svg.append("g")
-								   .attr("class", "nodeGroup")
-								   .attr("transform", `translate(${data["xposition"]}, ${data["yposition"]})`);
-				console.log("Node Group Created: ", nodeGroup.node());  // Debugging statement
-				
-				// Create the popup for each node (hidden by default)
-				let popupWidth = 150;  // Width of the popup
-				let popupHeight = 50;  // Height of the popup
-				nodeGroup.append("rect")
-						 .attr("class", "popup")
-						 .attr("x", -popupWidth/2)
-						 .attr("y", -popupHeight - 10)  // Positioning it 10 units above the node
-						 .attr("width", popupWidth)
-						 .attr("height", popupHeight)
-						 .attr("visibility", "hidden")
-						 .attr("fill", "#f9f9f9")
-						 .attr("stroke", "#aaa");
-				
-				nodeGroup.append("text")
-						 .attr("class", "popupText")
-						 .attr("x", 0)
-						 .attr("y", -popupHeight/2)
-						 .attr("text-anchor", "middle")
-						 .text(data.title)  // Displaying the node's title in the popup
-						 .attr("visibility", "hidden");
-				
-				// Your existing code for drawing the shapes goes here...
-				if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
-					console.warn("Incomplete data:", data);  
-					return;
-				}
+    dataArray.forEach((data, index) => {
+        let clipId = "clip" + index;
 
-				switch(data.shapetype.toLowerCase()) {
-					case 'circle':
-						let circle = svg.append("circle")
-										.attr("cx", data.xposition)
-										.attr("cy", data.yposition)
-										.attr("r", data.size)
-										.attr("fill", "blue");
-						break;
+        let nodeGroup = svg.append("g")
+                           .attr("class", "nodeGroup")
+                           .attr("transform", `translate(${data["xposition"]}, ${data["yposition"]})`);
+        
+        console.log("Node Group Created: ", nodeGroup.node());
 
-					case 'square':
-						let square = svg.append("rect")
-										.attr("x", data.xposition - data.size / 2)
-										.attr("y", data.yposition - data.size / 2)
-										.attr("width", data.size)
-										.attr("height", data.size)
-										.attr("fill", "red");
+        // Create the popup for each node (hidden by default)
+        let popupWidth = 150;  // Width of the popup
+        let popupHeight = 50;  // Height of the popup
+        nodeGroup.append("rect")
+                 .attr("class", "popup")
+                 .attr("x", -popupWidth/2)
+                 .attr("y", -popupHeight - 10)
+                 .attr("width", popupWidth)
+                 .attr("height", popupHeight)
+                 .attr("visibility", "hidden")
+                 .attr("fill", "#f9f9f9")
+                 .attr("stroke", "#aaa");
 
-						svg.append("clipPath")
-						   .attr("id", clipId)
-						   .append("rect")
-						   .attr("x", data.xposition - data.size / 2)
-						   .attr("y", data.yposition - data.size / 2)
-						   .attr("width", data.size)
-						   .attr("height", data.size);
-						break;
+        nodeGroup.append("text")
+                 .attr("class", "popupText")
+                 .attr("x", 0)
+                 .attr("y", -popupHeight/2)
+                 .attr("text-anchor", "middle")
+                 .text(data.title)
+                 .attr("visibility", "hidden");
 
-					case 'diamond':
-						// Define path commands for a diamond centered around (x, y)
-						const x = parseFloat(data["xposition"]);
-						const y = parseFloat(data["yposition"]);
-						const s = parseFloat(data.size) / 2;
-						const diamondPath = `M ${x} ${y-s} L ${x+s} ${y} L ${x} ${y+s} L ${x-s} ${y} Z`;
+        if (!data.shapetype || !data.xposition || !data.yposition || !data.size) {
+            console.warn("Incomplete data:", data);
+            return;
+        }
 
-						svg.append("path")
-						   .attr("d", diamondPath)
-						   .attr("fill", "green");
+        switch(data.shapetype.toLowerCase()) {
+            case 'circle':
+                svg.append("circle")
+                   .attr("cx", data.xposition)
+                   .attr("cy", data.yposition)
+                   .attr("r", data.size)
+                   .attr("fill", "blue");
+                break;
 
-						svg.append("clipPath")
-						   .attr("id", clipId)  // Use the unique clipId
-						   .append("path")
-						   .attr("d", diamondPath);
-						break;
+            case 'square':
+                svg.append("rect")
+                   .attr("x", data.xposition - data.size / 2)
+                   .attr("y", data.yposition - data.size / 2)
+                   .attr("width", data.size)
+                   .attr("height", data.size)
+                   .attr("fill", "red");
 
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("rect")
+                   .attr("x", data.xposition - data.size / 2)
+                   .attr("y", data.yposition - data.size / 2)
+                   .attr("width", data.size)
+                   .attr("height", data.size);
+                break;
 
-					// Add cases for other shapes as needed
-				}
+            case 'diamond':
+                const x = parseFloat(data["xposition"]);
+                const y = parseFloat(data["yposition"]);
+                const s = parseFloat(data.size) / 2;
+                const diamondPath = `M ${x} ${y-s} L ${x+s} ${y} L ${x} ${y+s} L ${x-s} ${y} Z`;
 
-					console.log("Image URL: ", data.image);  // Debugging statement
-					console.log("Clip Path Created with ID: ", clipId);  // Debugging statement
+                svg.append("path")
+                   .attr("d", diamondPath)
+                   .attr("fill", "green");
 
-					nodeGroup.on("mouseover", function() {
-						console.log("Mouse over detected for group:", this);  // Debugging statement
-						d3.select(this).select(".popup").attr("visibility", "visible");
-						d3.select(this).select(".popupText").attr("visibility", "visible");
-					})
-					.on("mouseout", function() {
-						console.log("Mouse out detected for group:", this);  // Debugging statement
-						d3.select(this).select(".popup").attr("visibility", "hidden");
-						d3.select(this).select(".popupText").attr("visibility", "hidden");
-					});
+                svg.append("clipPath")
+                   .attr("id", clipId)
+                   .append("path")
+                   .attr("d", diamondPath);
+                break;
 
-				// Append the image and clip it with the defined clipPath
-					nodeGroup.append("image")
-						 .attr("xlink:href", data.image)
-						 .attr("x", -data.size / 2)  // Adjusted to align with nodeGroup's translate
-						 .attr("y", -data.size / 2)  // Adjusted to align with nodeGroup's translate
-						 .attr("width", data.size)
-						 .attr("height", data.size);
+            default:
+                console.warn("Unrecognized shape type:", data.shapetype);
+                break;
+        }
 
-				// Apply the clip-path to the entire nodeGroup
-					nodeGroup.attr("clip-path", `url(#${clipId})`);
+        // Append the image and clip it with the defined clipPath
+        nodeGroup.append("image")
+                 .attr("xlink:href", data.image)
+                 .attr("x", -data.size / 2)
+                 .attr("y", -data.size / 2)
+                 .attr("width", data.size)
+                 .attr("height", data.size)
+                 .attr("clip-path", `url(#${clipId})`);
 
-			console.log("Node Group after appending elements:", nodeGroup.node());  // Debugging statement
-		});
-	}
+        nodeGroup.on("mouseover", function() {
+            d3.select(this).select(".popup").attr("visibility", "visible");
+            d3.select(this).select(".popupText").attr("visibility", "visible");
+        })
+        .on("mouseout", function() {
+            d3.select(this).select(".popup").attr("visibility", "hidden");
+            d3.select(this).select(".popupText").attr("visibility", "hidden");
+        });
+
+        console.log("Node Group after appending elements:", nodeGroup.node());
+    });
+}
 </script>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
 		// Define the version here
-		const version = "2.26";
+		const version = "2.262";
 
 		// Set the version in the h3 title
 		const titleElement = document.getElementById("version-title");
